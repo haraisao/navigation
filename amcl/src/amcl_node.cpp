@@ -77,6 +77,15 @@
 
 #define NEW_UNIFORM_SAMPLING 1
 
+#ifdef WIN32
+#include <random>
+std:: default_random_engine generator;
+std::uniform_real_distribution<double> distr(0.0,1.0);
+double drand48(){
+    return distr(generator);
+}
+#endif
+
 using namespace amcl;
 
 // Pose hypothesis

@@ -37,7 +37,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#ifndef WIN32
 #include <libgen.h>
+#endif
 #include <fstream>
 
 #include "ros/ros.h"
@@ -145,6 +147,7 @@ class MapServer
             ROS_ERROR("The image tag cannot be an empty string.");
             exit(-1);
           }
+#ifndef WIN32
           if(mapfname[0] != '/')
           {
             // dirname can modify what you pass it
@@ -152,6 +155,7 @@ class MapServer
             mapfname = std::string(dirname(fname_copy)) + '/' + mapfname;
             free(fname_copy);
           }
+#endif
         } catch (YAML::InvalidScalar &) {
           ROS_ERROR("The map does not contain an image tag or it is invalid.");
           exit(-1);

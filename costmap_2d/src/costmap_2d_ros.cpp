@@ -45,6 +45,11 @@
 #include <tf2/utils.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
+#ifdef WIN32
+#include <sys/types.h>
+#include <sys/timeb.h>
+#endif
+
 using namespace std;
 
 namespace costmap_2d
@@ -391,15 +396,29 @@ void Costmap2DROS::mapUpdateLoop(double frequency)
   ros::Rate r(frequency);
   while (nh.ok() && !map_update_thread_shutdown_)
   {
+#ifdef WIN32
+    struct __timeb64 start, end;
+#else
     struct timeval start, end;
+#endif
     double start_t, end_t, t_diff;
+#ifdef WIN32
+    _ftime64(&start);
+#else
     gettimeofday(&start, NULL);
-
+#endif
     updateMap();
+#ifdef WIN32
+    _ftime64(&end);
 
+    start_t = start.time + double(start.millitm) / 1000;
+    end_t = end.time + double(end.millitm) / 1000;
+#else
     gettimeofday(&end, NULL);
+
     start_t = start.tv_sec + double(start.tv_usec) / 1e6;
     end_t = end.tv_sec + double(end.tv_usec) / 1e6;
+#endif
     t_diff = end_t - start_t;
     ROS_DEBUG("Map update time: %.9f", t_diff);
     if (publish_cycle.toSec() > 0 && layered_costmap_->isInitialized())

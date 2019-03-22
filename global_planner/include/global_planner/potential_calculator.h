@@ -37,6 +37,9 @@
  *********************************************************************/
 #ifndef _POTENTIAL_CALCULATOR_H
 #define _POTENTIAL_CALCULATOR_H
+#ifdef WIN32
+#include <algorithm>
+#endif
 namespace global_planner {
 
 class PotentialCalculator {

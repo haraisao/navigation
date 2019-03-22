@@ -34,6 +34,14 @@
 
 #include "amcl/pf/pf_pdf.h"
 
+#ifdef WIN32
+double drand48(){
+    return rand() / 32767.0;
+}
+void srand48(unsigned int s){
+  srand(s);
+}
+#endif
 // Random number generator seed value
 static unsigned int pf_pdf_seed;
 

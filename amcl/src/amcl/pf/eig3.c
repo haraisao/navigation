@@ -17,8 +17,12 @@ static double hypot2(double x, double y) {
 
 // Symmetric Householder reduction to tridiagonal form.
 
+#ifdef WIN32
+static void tred2(double **V, double d[], double e[]) {
+  int n = sizeof(d);
+#else
 static void tred2(double V[n][n], double d[n], double e[n]) {
-
+#endif
 //  This is derived from the Algol procedures tred2 by
 //  Bowdler, Martin, Reinsch, and Wilkinson, Handbook for
 //  Auto. Comp., Vol.ii-Linear Algebra, and the corresponding
@@ -135,9 +139,12 @@ static void tred2(double V[n][n], double d[n], double e[n]) {
 } 
 
 // Symmetric tridiagonal QL algorithm.
-
+#ifdef WIN32
+static void tql2(double **V, double d[], double e[]) {
+  int n=sizeof(d);
+#else
 static void tql2(double V[n][n], double d[n], double e[n]) {
-
+#endif
 //  This is derived from the Algol procedures tql2, by
 //  Bowdler, Martin, Reinsch, and Wilkinson, Handbook for
 //  Auto. Comp., Vol.ii-Linear Algebra, and the corresponding
@@ -257,10 +264,19 @@ static void tql2(double V[n][n], double d[n], double e[n]) {
     }
   }
 }
-
+#ifdef WIN32
+void eigen_decomposition(double **A, double **V, double d[]) {
+  int n = sizeof(d);
+#else
 void eigen_decomposition(double A[n][n], double V[n][n], double d[n]) {
+#endif
   int i,j;
+#ifdef WIN32
+  double *e;
+  e = (double *)malloc(sizeof(double) * n);
+#else
   double e[n];
+#endif
   for (i = 0; i < n; i++) {
     for (j = 0; j < n; j++) {
       V[i][j] = A[i][j];
@@ -268,4 +284,8 @@ void eigen_decomposition(double A[n][n], double V[n][n], double d[n]) {
   }
   tred2(V, d, e);
   tql2(V, d, e);
+
+#ifdef WIN32
+  free(e);
+#endif
 }

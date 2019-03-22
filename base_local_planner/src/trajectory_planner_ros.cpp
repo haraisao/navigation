@@ -37,7 +37,12 @@
 
 #include <base_local_planner/trajectory_planner_ros.h>
 
+#ifdef WIN32
+#include <sys/types.h>
+#include <sys/timeb.h>
+#else
 #include <sys/time.h>
+#endif
 #include <boost/tokenizer.hpp>
 
 #include <Eigen/Core>

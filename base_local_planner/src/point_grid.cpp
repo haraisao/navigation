@@ -37,7 +37,12 @@
 
 #include <base_local_planner/point_grid.h>
 #include <ros/console.h>
+#ifdef WIN32
+#include <sys/types.h>
+#include <sys/timeb.h>
+#else
 #include <sys/time.h>
+#endif
 #include <math.h>
 #include <cstdio>
 #include <sensor_msgs/point_cloud2_iterator.h>
@@ -671,32 +676,56 @@ int main(int argc, char** argv){
   point.y = 1.2;
   point.z = 1.0;
 
+#ifdef WIN32
+  struct __timeb64 start, end;
+#else
   struct timeval start, end;
+#endif
   double start_t, end_t, t_diff;
 
   printPSHeader();
 
+#ifdef WIN32
+  _ftime64(&start);
+#else
   gettimeofday(&start, NULL);
+#endif
   for(unsigned int i = 0; i < 2000; ++i){
     pg.insert(point);
   }
+#ifdef WIN32
+  _ftime64(&end);
+  start_t = start.time + double(start.millitm) / 1000;
+  end_t = end.time + double(end.millitm) / 1000;
+#else
   gettimeofday(&end, NULL);
   start_t = start.tv_sec + double(start.tv_usec) / 1e6;
   end_t = end.tv_sec + double(end.tv_usec) / 1e6;
+#endif
   t_diff = end_t - start_t;
   printf("%%Insertion Time: %.9f \n", t_diff);
 
   vector<Observation> obs;
   vector<PlanarLaserScan> scan;
 
+#ifdef WIN32
+  _ftime64(&start);
+#else
   gettimeofday(&start, NULL);
+#endif
   pg.updateWorld(footprint, obs, scan);
   double legal = pg.footprintCost(pt, footprint, 0.0, .95);
   pg.updateWorld(footprint, obs, scan);
   double legal2 = pg.footprintCost(pt, footprint, 0.0, .95);
+#ifdef WIN32
+  _ftime64(&end);
+  start_t = start.time + double(start.millitm) / 1000;
+  end_t = end.time + double(end.millitm) / 1000;
+#else
   gettimeofday(&end, NULL);
   start_t = start.tv_sec + double(start.tv_usec) / 1e6;
   end_t = end.tv_sec + double(end.tv_usec) / 1e6;
+#endif
   t_diff = end_t - start_t;
 
   printf("%%Footprint calc: %.9f \n", t_diff);

@@ -33,6 +33,9 @@
 #include "amcl/pf/pf_vector.h"
 #include "amcl/pf/eig3.h"
 
+#ifdef WIN32
+#define finite(X)  _finitef(X)
+#endif
 
 // Return a zero vector
 pf_vector_t pf_vector_zero()

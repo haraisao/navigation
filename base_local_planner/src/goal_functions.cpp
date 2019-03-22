@@ -203,7 +203,11 @@ namespace base_local_planner {
 
   bool isGoalReached(const tf2_ros::Buffer& tf,
       const std::vector<geometry_msgs::PoseStamped>& global_plan,
+#ifdef WIN32
+      const costmap_2d::Costmap2D& costmap [[unused]],
+#else
       const costmap_2d::Costmap2D& costmap __attribute__((unused)),
+#endif
       const std::string& global_frame,
       geometry_msgs::PoseStamped& global_pose,
       const nav_msgs::Odometry& base_odom,
