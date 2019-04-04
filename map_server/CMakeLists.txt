@@ -8,9 +8,9 @@ find_package(catkin REQUIRED
             tf2
         )
 
-find_package(Bullet REQUIRED)
-find_package(SDL REQUIRED)
-find_package(SDL_image REQUIRED)
+find_package(Bullet3 REQUIRED)
+find_package(SDL2 REQUIRED)
+find_package(SDL2_image REQUIRED)
 
 if(NOT WIN32)
     find_package(PkgConfig REQUIRED)
