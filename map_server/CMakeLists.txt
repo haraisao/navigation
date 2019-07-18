@@ -53,6 +53,7 @@ target_link_libraries(map_server_image_loader
     ${SDL_LIBRARY}
     ${SDL_IMAGE_LIBRARIES}
 )
+target_link_directories(map_server_image_loader PRIVATE ${BULLET_LIBRARY_DIRS})
 
 add_executable(map_server src/main.cpp)
 add_dependencies(map_server ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
@@ -61,6 +62,7 @@ target_link_libraries(map_server
     ${YAMLCPP_LIBRARIES}
     ${catkin_LIBRARIES}
 )
+target_link_directories(map_server PRIVATE ${BULLET_LIBRARY_DIRS})
 
 add_executable(map_server-map_saver src/map_saver.cpp)
 add_dependencies(map_server-map_saver ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
